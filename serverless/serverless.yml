@@ -1,0 +1,68 @@
+org: aquijuz
+app: serverless-3
+service: serverless-3
+frameworkVersion: '3'
+
+resources:
+  extensions:
+    S3BucketAlunoscsv:
+      Properties:
+        CorsConfiguration:
+          CorsRules:
+            - AllowedMethods:
+                - POST
+                - PUT
+                - GET
+                - HEAD
+              AllowedOrigins:
+                - "*"
+              AllowedHeaders:
+                - "*"
+
+params:
+  dev:
+    bucket: alunos-csv-local
+  prod:
+    bucket: alunos-csv
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 
+            - s3:GetObject
+          Resource: 
+            - arn:aws:s3:::alunos-csv/*
+  environment:
+    STAGE: ${sls:stage}
+
+functions:
+  cadastrarAlunos:
+    handler: src/functions/cadastro_batch/index.cadastrarAlunos
+    events:
+      - s3:
+          bucket: alunos-csv
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .csv
+
+  simulandoUploadDoCsv:
+    handler: src/functions/cadastro_batch/local/index.simulandoUploadDoCsv
+    events:
+      - httpApi:
+          path: /alunos/batch
+          method: post
+    enabled: false
+  
+custom:
+  serverless-offline:
+    httpPort: 3001
+
+plugins:
+  - serverless-offline
+  - serverless-s3-local
+  - serverless-disable-functions
+  

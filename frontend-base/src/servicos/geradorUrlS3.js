@@ -5,7 +5,7 @@ async function geraUrlPreassinada(chaveArquivo) {
 
   let credentials;
 
-  if (process.env.REACT_APP_ENVIRONMENT === "dev") {
+  if (process.env.REACT_APP_S3_ENVIRONMENT === "dev") {
     credentials = {
       accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_S3_SECRET_KEY

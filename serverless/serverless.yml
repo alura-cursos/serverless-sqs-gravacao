@@ -56,6 +56,13 @@ functions:
           path: /alunos/batch
           method: post
     enabled: false
+
+  enviarUrlPreassinada:
+    handler: src/functions/presignedUrl/index.enviarUrlPreassinada
+    events:
+      - httpApi:
+          path: /alunos/presignedurl
+          method: post
   
 custom:
   serverless-offline:

@@ -47,7 +47,6 @@ async function requestPresignURL (nomeArquivo) {
     const res = await fetch('http://localhost:3001/alunos/presignedurl', fetchObj)
   
     const body = await res.json();
-  
     return body.url;
   } catch (erro) {
     return erro;

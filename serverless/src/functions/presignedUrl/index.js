@@ -1,4 +1,10 @@
-module.exports.enviarUrlPreassinada = async () => {
+const { geraUrlPreassinada } = require('./geradorUrlS3');
+const { buildResponse } = require('../../../utils/fetchHelpers');
 
-  // { url: "url preassinada"}
+module.exports.enviarUrlPreassinada = async (evento) => {
+
+  const { nomeArquivo } = JSON.parse(evento.body);
+  const url = await geraUrlPreassinada(nomeArquivo);
+
+  return buildResponse(201, { url });
 };

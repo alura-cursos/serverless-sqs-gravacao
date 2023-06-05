@@ -1,5 +1,4 @@
 import config from "../config/config.json";
-import geraUrlPreassinada from "./geradorUrlS3";
 
 const BASE_URL = config.apiUrl.prod;
 
@@ -40,9 +39,19 @@ async function enviaArquivoViaURL (url, arquivo) {
   }
 }
 
-async function geraPresignURL (nomeArquivo) {
-  const urlChave = await geraUrlPreassinada(nomeArquivo);
-  return urlChave;
+async function requestPresignURL (nomeArquivo) {
+
+  try {
+    const fetchObj = buildFetchObj('POST', 'application/json', JSON.stringify({ nomeArquivo }));
+  
+    const res = await fetch('http://localhost:3001/alunos/presignedurl', fetchObj)
+  
+    const body = await res.json();
+  
+    return body.url;
+  } catch (erro) {
+    return erro;
+  }
 }
 
-export { criaRegistro, enviaArquivoViaURL, geraPresignURL };
+export { criaRegistro, enviaArquivoViaURL, requestPresignURL };

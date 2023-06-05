@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Botao from "../Botao";
 import CampoArquivo from "../CampoArquivo";
-import { geraPresignURL, enviaArquivoViaURL } from "../../servicos/api-connect";
+import { requestPresignURL, enviaArquivoViaURL } from "../../servicos/api-connect";
 import "./FormularioBatch.css";
 
 const FormularioBatch = (props) => {
@@ -11,7 +11,7 @@ const FormularioBatch = (props) => {
 
   const submitHandler = async (evento) => {
     evento.preventDefault();
-    const urlPreassinada = await geraPresignURL(ref.current.files[0].name);
+    const urlPreassinada = await requestPresignURL(ref.current.files[0].name);
     const res = await enviaArquivoViaURL(urlPreassinada, arquivoSelecionado)
     setResOperacaoBatch(res);
   };

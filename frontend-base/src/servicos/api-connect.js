@@ -44,7 +44,7 @@ async function requestPresignURL (nomeArquivo) {
   try {
     const fetchObj = buildFetchObj('POST', 'application/json', JSON.stringify({ nomeArquivo }));
   
-    const res = await fetch('http://localhost:3001/alunos/presignedurl', fetchObj)
+    const res = await fetch(`${config.slsUrl.prod}/alunos/presignedurl`, fetchObj)
   
     const body = await res.json();
     return body.url;

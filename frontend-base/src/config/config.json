@@ -2,5 +2,8 @@
   "apiUrl": {
     "dev": "http://localhost:3001",
     "prod": "http://curso-serverless3-api-151088965.us-east-1.elb.amazonaws.com"
+  },
+  "slsUrl": {
+    "prod": "https://olatzpq0bf.execute-api.us-east-1.amazonaws.com"
   }
 }

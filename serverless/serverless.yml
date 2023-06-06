@@ -26,6 +26,22 @@ params:
     bucket: alunos-csv
 
 provider:
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - Content-Type
+        - Access-Control-Allow-Origin
+        - Access-Control-Allow-Headers
+        - Access-Control-Allow-Methods
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+  logs:
+    httpApi: true
+
   name: aws
   runtime: nodejs18.x
   iam:
@@ -38,6 +54,8 @@ provider:
             - arn:aws:s3:::alunos-csv/*
   environment:
     STAGE: ${sls:stage}
+    ACCESS_KEY_ID: ${param:ACCESS_KEY_ID}
+    SECRET_ACCESS_KEY: ${param:SECRET_ACCESS_KEY}
 
 functions:
   cadastrarAlunos:

@@ -18,6 +18,13 @@ resources:
                 - "*"
               AllowedHeaders:
                 - "*"
+  Resources:
+    FilaCadastro:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: cadastro.fifo
+        FifoQueue: true
+        SqsManagedSseEnabled: false
 
 params:
   dev:
@@ -52,14 +59,20 @@ provider:
             - s3:GetObject
           Resource: 
             - arn:aws:s3:::alunos-csv/*
+        - Effect: Allow
+          Action: 
+            - sqs:*
+          Resource: 
+            Fn::GetAtt: [FilaCadastro, Arn]
   environment:
     STAGE: ${sls:stage}
     ACCESS_KEY_ID: ${param:ACCESS_KEY_ID}
     SECRET_ACCESS_KEY: ${param:SECRET_ACCESS_KEY}
+    SQS_QUEUE_CADASTRO_URL: { Ref: FilaCadastro }
 
 functions:
-  cadastrarAlunos:
-    handler: src/functions/cadastro_batch/index.cadastrarAlunos
+  extraiDadosCsv:
+    handler: src/functions/extratorCsv/index.extraiDadosCsv
     events:
       - s3:
           bucket: alunos-csv
@@ -68,7 +81,7 @@ functions:
             - suffix: .csv
 
   simulandoUploadDoCsv:
-    handler: src/functions/cadastro_batch/local/index.simulandoUploadDoCsv
+    handler: src/functions/extratorCsv/local/index.simulandoUploadDoCsv
     events:
       - httpApi:
           path: /alunos/batch

@@ -31,13 +31,14 @@ const obtemDadosDoCsvDoBucket = async (nome, chave) => {
   return dadosCsv;
 };
 
-module.exports.cadastrarAlunos = async (evento) => {
+module.exports.extraiDadosCsv = async (evento) => {
   try {
     const eventoS3 = evento.Records[0].s3;
     const nomeBucket = eventoS3.bucket.name;
     const chaveBucket = decodeURIComponent(eventoS3.object.key.replace(/\+/g, ' '));
     const dadosArquivo = await obtemDadosDoCsvDoBucket(nomeBucket, chaveBucket);
     const alunos = await converteDadosCsv(dadosArquivo);
+    // aqui vai ser substituido pelo sqs
     await cadastrarAlunosNoBd(alunos);
     console.log('Cadastro dos alunos realizado com sucesso!');
   } catch (erro) {

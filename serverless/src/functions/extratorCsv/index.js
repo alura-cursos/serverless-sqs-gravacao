@@ -1,6 +1,6 @@
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
-const { cadastrarAlunosNoBd } = require('./cadastrarAlunosNoBd');
 const { converteDadosCsv } = require('./converteDadosCsv');
+const { cadastroProducer } = require('../../functions/producers/cadastroProducer');
 
 async function criaClienteS3 () {
   if(process.env.STAGE === 'dev') {
@@ -38,8 +38,11 @@ module.exports.extraiDadosCsv = async (evento) => {
     const chaveBucket = decodeURIComponent(eventoS3.object.key.replace(/\+/g, ' '));
     const dadosArquivo = await obtemDadosDoCsvDoBucket(nomeBucket, chaveBucket);
     const alunos = await converteDadosCsv(dadosArquivo);
-    // aqui vai ser substituido pelo sqs
-    await cadastrarAlunosNoBd(alunos);
+
+    for (let aluno of alunos) {
+      await cadastroProducer(aluno);
+    }
+
     console.log('Cadastro dos alunos realizado com sucesso!');
   } catch (erro) {
     console.log(erro);

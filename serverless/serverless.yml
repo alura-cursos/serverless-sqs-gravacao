@@ -94,6 +94,16 @@ functions:
       - httpApi:
           path: /alunos/presignedurl
           method: post
+
+  cadastroConsumer:
+    handler: src/functions/consumers/cadastroConsumer.cadastroConsumer
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - FilaCadastro
+              - Arn
+          batchSize: 1
   
 custom:
   serverless-offline:

@@ -19,6 +19,6 @@ module.exports.emailConfirmaProducer = async (objAluno) => {
     return mensagem;
 
   } catch (erro) {
-    console.error(erro);
+    console.log(erro);
   }
 };

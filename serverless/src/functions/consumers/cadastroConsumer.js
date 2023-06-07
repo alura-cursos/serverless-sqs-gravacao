@@ -8,6 +8,8 @@ module.exports.cadastroConsumer = async (evento) => {
     return cadastrarAlunos(body);
   } catch (erro) {
     console.error('falha no envio para cadastro');
-    console.error(erro);
+    throw erro;
   }
 };
+
+//{"nome":"Paulo","email":"pauloemail"}

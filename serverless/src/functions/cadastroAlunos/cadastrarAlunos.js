@@ -1,5 +1,6 @@
 const config = require('../../../config/config.json');
 const { fetchApi, buildResponse } = require('../../../utils/fetchHelpers');
+const { FetchErro } = require('./erros/FetchErro');
 
 module.exports.cadastrarAlunos = async (aluno) => {
 
@@ -15,12 +16,10 @@ module.exports.cadastrarAlunos = async (aluno) => {
       };
     }
     
-    return {
-      mensagem: 'outros status',
-      status: res.statusCode
-    };
+    throw new FetchErro(res.statusCode, aluno);
 
   } catch (erro) {
     console.error(erro);
+    throw erro;
   }
 };

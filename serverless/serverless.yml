@@ -25,6 +25,20 @@ resources:
         QueueName: cadastro.fifo
         FifoQueue: true
         SqsManagedSseEnabled: false
+        RedrivePolicy:
+          deadLetterTargetArn:
+            Fn::GetAtt:
+              - DlqCadastro
+              - Arn
+          maxReceiveCount: 5
+        VisibilityTimeout: 10
+        
+    DlqCadastro:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: cadastro-dlq.fifo
+        FifoQueue: true
+        SqsManagedSseEnabled: false
 
 params:
   dev:

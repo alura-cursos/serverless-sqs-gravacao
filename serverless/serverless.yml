@@ -31,7 +31,7 @@ resources:
               - DlqCadastro
               - Arn
           maxReceiveCount: 5
-        VisibilityTimeout: 10
+        VisibilityTimeout: 1
 
     DlqCadastro:
       Type: AWS::SQS::Queue

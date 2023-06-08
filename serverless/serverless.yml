@@ -31,7 +31,7 @@ resources:
               - DlqCadastro
               - Arn
           maxReceiveCount: 5
-        VisibilityTimeout: 1
+        VisibilityTimeout: 10
 
     FilaEmailConfirmacao:
       Type: AWS::SQS::Queue
@@ -45,7 +45,7 @@ resources:
         #       - DlqCadastro
         #       - Arn
         #   maxReceiveCount: 5
-        VisibilityTimeout: 1
+        VisibilityTimeout: 10
 
     DlqCadastro:
       Type: AWS::SQS::Queue
@@ -139,7 +139,7 @@ functions:
               - FilaCadastro
               - Arn
           batchSize: 1
-    timeout: 10
+    timeout: 2
 
   enviaEmailNoCadastro:
     handler: src/functions/enviaEmailNoCadastro/index.enviaEmailNoCadastro
@@ -150,7 +150,18 @@ functions:
               - FilaEmailConfirmacao
               - Arn
           batchSize: 1
-    timeout: 10
+    timeout: 2
+
+  emailErroCadastro:
+    handler: src/functions/consumers/trataErrosCadastroConsumer.trataErrosCadastroConsumer
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - DlqCadastro
+              - Arn
+          batchSize: 1
+    timeout: 2
   
 custom:
   serverless-offline:
